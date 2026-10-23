@@ -16,7 +16,7 @@ namespace Common.QRCode
         {
             _model = model;
 
-            _model.CameraTexture.Play();
+            _model.CameraTexture?.Play();
 
             this.UpdateAsObservable().Subscribe(_ => UpdateQrScanResult()).AddTo(this);
         }
@@ -25,14 +25,15 @@ namespace Common.QRCode
         {
             Debug.Log("destoroy");
 
-            _model.CameraTexture.Stop();
+            _model.CameraTexture?.Stop();
         }
 
         private void UpdateQrScanResult()
         {
-            if (_model.IsScannerEnable && _model.CameraTexture.didUpdateThisFrame)
+            var camera = _model.CameraTexture;
+            if (_model.IsScannerEnable && camera != null && camera.didUpdateThisFrame)
             {
-                _model.QrScanResult = Reader.QRCodeToText(_model.CameraTexture);
+                _model.QrScanResult = Reader.QRCodeToText(camera);
             }
             if (_model.QrScanResult == "100")
             {

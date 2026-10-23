@@ -42,7 +42,14 @@ namespace Common.QRCode
             _scanResultCell.ValueChanged += x => { _model.QrScanResult = x; };
             _scanResultId = AddInputField(_scanResultCell);
 
-            AddSwitch(false, "QrCodeScannerScreenを表示する", valueChanged: x => { _scannerScreen.gameObject.SetActive(x); });
+            AddSwitch(false, "QrCodeScannerScreenを表示する", valueChanged: x =>
+            {
+                // シーン遷移後はデバッグシートだけ残り、RawImage は破棄済みになる
+                if (_scannerScreen != null)
+                {
+                    _scannerScreen.gameObject.SetActive(x);
+                }
+            });
 
             AddLabel("Width", subText: _model.Width.ToString());
 

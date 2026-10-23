@@ -8,7 +8,8 @@ namespace Common.QRCode
     {
         public bool IsScannerEnable { get; set; } = true;
         public string QrScanResult { get; set; } = string.Empty;
-        public WebCamTexture CameraTexture { get; private set; }
+        /// <summary>カメラが搭載されていない場合は null</summary>
+        public WebCamTexture? CameraTexture { get; private set; }
         public int Width { get; private set; }
         public int Height { get; private set; }
 
@@ -16,7 +17,15 @@ namespace Common.QRCode
         {
             Width = 500;
             Height = 500;
-            CameraTexture = new(WebCamTexture.devices[0].name, Width, Height)
+
+            var devices = WebCamTexture.devices;
+            if (devices.Length == 0)
+            {
+                Debug.LogWarning("カメラが見つかりません。QRコードの読み取りは無効です。");
+                return;
+            }
+
+            CameraTexture = new(devices[0].name, Width, Height)
             {
                 autoFocusPoint = new Vector2(Width * 0.2f, Height * 0.2f)
             };

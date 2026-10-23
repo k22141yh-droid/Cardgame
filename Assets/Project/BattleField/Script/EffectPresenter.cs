@@ -1,6 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.Video;
 
 using Common.MasterData;
 using Cysharp.Threading.Tasks;
@@ -9,6 +12,16 @@ using BattleField.Script.TimelineManagge;
 
 namespace BattleField.Script.Effect
 {
+    // カードごとの攻撃動画。Level は威力 2000 → 3 / 1000 → 2 / 500 → 1(ヨシモトは 0)
+    [Serializable]
+    public class AttackVideoEntry
+    {
+        public CardType Type;
+        public CardHand Hand;
+        public int Level;
+        public VideoClip Clip;
+    }
+
     public class EffectPresenter : MonoBehaviour
     {
         // --- Level 3 ---
@@ -43,6 +56,14 @@ namespace BattleField.Script.Effect
         [SerializeField] TimelineManagger _level1GrassRockEffect;
         [SerializeField] TimelineManagger _level1GrassScissorsEffect;
         [SerializeField] TimelineManagger _level1GrassPaperEffect;
+
+        // 該当するカードの動画が登録されていれば、Timeline の代わりに動画を再生する
+        [SerializeField] List<AttackVideoEntry> _attackVideos = new List<AttackVideoEntry>();
+
+        private VideoPlayer _videoPlayer;
+        private GameObject _videoCanvas;
+        private RawImage _videoImage;
+        private RenderTexture _videoTexture;
 
         // 威力 → エフェクトレベル
         private const int PowerLevel3 = 2000;
@@ -101,9 +122,100 @@ namespace BattleField.Script.Effect
             return effects[typeIndex * HandCount + handIndex];
         }
 
+        private VideoClip FindVideo(Card card, int level)
+        {
+            foreach (var entry in _attackVideos)
+            {
+                if (entry.Clip != null && entry.Type == card.Type && entry.Hand == card.Hand && entry.Level == level)
+                {
+                    return entry.Clip;
+                }
+            }
+            return null;
+        }
+
+        // 画面全体を覆う Canvas に動画を映して、再生が終わるまで待つ。
+        // シーン側の配置を増やさないよう、必要になった時点で実行時に生成する。
+        private void EnsureVideoSurface()
+        {
+            if (_videoPlayer != null) return;
+
+            _videoCanvas = new GameObject("AttackVideoCanvas");
+            _videoCanvas.transform.SetParent(transform, false);
+            var canvas = _videoCanvas.AddComponent<Canvas>();
+            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            canvas.sortingOrder = 1000;
+
+            var imageObject = new GameObject("AttackVideoImage");
+            imageObject.transform.SetParent(_videoCanvas.transform, false);
+            _videoImage = imageObject.AddComponent<RawImage>();
+            _videoImage.raycastTarget = false;
+            var rect = _videoImage.rectTransform;
+            rect.anchorMin = Vector2.zero;
+            rect.anchorMax = Vector2.one;
+            rect.offsetMin = Vector2.zero;
+            rect.offsetMax = Vector2.zero;
+
+            _videoPlayer = _videoCanvas.AddComponent<VideoPlayer>();
+            _videoPlayer.playOnAwake = false;
+            _videoPlayer.isLooping = false;
+            _videoPlayer.renderMode = VideoRenderMode.RenderTexture;
+            _videoPlayer.audioOutputMode = VideoAudioOutputMode.Direct;
+
+            _videoCanvas.SetActive(false);
+        }
+
+        private async UniTask PlayVideo(VideoClip clip)
+        {
+            EnsureVideoSurface();
+            var ct = this.GetCancellationTokenOnDestroy();
+
+            ReleaseVideoTexture();
+            _videoTexture = new RenderTexture((int)clip.width, (int)clip.height, 0);
+            _videoPlayer.targetTexture = _videoTexture;
+            _videoImage.texture = _videoTexture;
+            _videoPlayer.clip = clip;
+
+            bool finished = false;
+            void OnFinished(VideoPlayer _) => finished = true;
+            _videoPlayer.loopPointReached += OnFinished;
+
+            _videoPlayer.Prepare();
+            await UniTask.WaitUntil(() => _videoPlayer.isPrepared, cancellationToken: ct);
+
+            _videoCanvas.SetActive(true);
+            _videoPlayer.Play();
+            await UniTask.WaitUntil(() => finished, cancellationToken: ct);
+
+            _videoPlayer.loopPointReached -= OnFinished;
+            _videoPlayer.Stop();
+            _videoCanvas.SetActive(false);
+            ReleaseVideoTexture();
+        }
+
+        private void ReleaseVideoTexture()
+        {
+            if (_videoTexture == null) return;
+            _videoTexture.Release();
+            Destroy(_videoTexture);
+            _videoTexture = null;
+        }
+
+        private void OnDestroy()
+        {
+            ReleaseVideoTexture();
+        }
+
         public async UniTask EffectProcess(Card card)
         {
             int level = PowerToLevel(card.Power);
+
+            var clip = FindVideo(card, level);
+            if (clip != null)
+            {
+                await PlayVideo(clip);
+                return;
+            }
 
             if (card.Type == CardType.Yoshimoto)
             {
