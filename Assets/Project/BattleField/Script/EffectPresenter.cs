@@ -162,7 +162,9 @@ namespace BattleField.Script.Effect
             _videoPlayer.renderMode = VideoRenderMode.RenderTexture;
             _videoPlayer.audioOutputMode = VideoAudioOutputMode.Direct;
 
-            _videoCanvas.SetActive(false);
+            // 非アクティブな GameObject の VideoPlayer は Prepare / Play できないため、
+            // Canvas はアクティブのまま、映像の表示だけを切り替える
+            _videoImage.enabled = false;
         }
 
         private async UniTask PlayVideo(VideoClip clip)
@@ -178,18 +180,28 @@ namespace BattleField.Script.Effect
 
             bool finished = false;
             void OnFinished(VideoPlayer _) => finished = true;
+            void OnError(VideoPlayer _, string message)
+            {
+                Debug.LogError($"攻撃動画を再生できません ({clip.name}): {message}");
+                finished = true;
+            }
             _videoPlayer.loopPointReached += OnFinished;
+            _videoPlayer.errorReceived += OnError;
 
             _videoPlayer.Prepare();
-            await UniTask.WaitUntil(() => _videoPlayer.isPrepared, cancellationToken: ct);
+            await UniTask.WaitUntil(() => _videoPlayer.isPrepared || finished, cancellationToken: ct);
 
-            _videoCanvas.SetActive(true);
-            _videoPlayer.Play();
-            await UniTask.WaitUntil(() => finished, cancellationToken: ct);
+            if (!finished)
+            {
+                _videoImage.enabled = true;
+                _videoPlayer.Play();
+                await UniTask.WaitUntil(() => finished, cancellationToken: ct);
+            }
 
             _videoPlayer.loopPointReached -= OnFinished;
+            _videoPlayer.errorReceived -= OnError;
             _videoPlayer.Stop();
-            _videoCanvas.SetActive(false);
+            _videoImage.enabled = false;
             ReleaseVideoTexture();
         }
 
@@ -213,6 +225,7 @@ namespace BattleField.Script.Effect
             var clip = FindVideo(card, level);
             if (clip != null)
             {
+                Debug.Log($"[{name}] 攻撃動画を再生: {clip.name} (ID {card.Id})");
                 await PlayVideo(clip);
                 return;
             }

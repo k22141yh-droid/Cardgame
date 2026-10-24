@@ -3220,10 +3220,10 @@ MonoBehaviour:
   _playerhp: {fileID: 700308225}
   _enemyhp: {fileID: 1502194118}
   _damageTimeline: {fileID: 1836929079}
-  _lose: {fileID: 1597445624}
   _damageTextEffect: {fileID: 5456326779037908134}
   _playerJankenSelector: {fileID: 90495358}
   _enemyJankenSelector: {fileID: 947173742}
+  _lose: {fileID: 1597445624}
   _enemyEffectPresenter: {fileID: 1502194119}
 --- !u!114 &467719852
 MonoBehaviour:
@@ -3240,10 +3240,10 @@ MonoBehaviour:
   _playerhp: {fileID: 700308225}
   _enemyhp: {fileID: 1502194118}
   _damageTimeline: {fileID: 1836929079}
-  _draw: {fileID: 1861658701}
   _damageTextEffect: {fileID: 5456326779037908134}
   _playerJankenSelector: {fileID: 90495358}
   _enemyJankenSelector: {fileID: 947173742}
+  _draw: {fileID: 1861658701}
   _playerEffectPresenter: {fileID: 700308226}
   _enemyEffectPresenter: {fileID: 1502194119}
 --- !u!114 &467719853
@@ -3261,10 +3261,10 @@ MonoBehaviour:
   _playerhp: {fileID: 700308225}
   _enemyhp: {fileID: 1502194118}
   _damageTimeline: {fileID: 1836929079}
-  _win: {fileID: 581607227}
   _damageTextEffect: {fileID: 5456326779037908134}
   _playerJankenSelector: {fileID: 90495358}
   _enemyJankenSelector: {fileID: 947173742}
+  _win: {fileID: 581607227}
   _playerEffectPresenter: {fileID: 700308226}
 --- !u!114 &467719854
 MonoBehaviour:
@@ -4833,6 +4833,63 @@ MonoBehaviour:
   _level1GrassRockEffect: {fileID: 0}
   _level1GrassScissorsEffect: {fileID: 0}
   _level1GrassPaperEffect: {fileID: 0}
+  _attackVideos:
+  - Type: 1
+    Hand: 0
+    Level: 3
+    Clip: {fileID: 32900000, guid: de1e8746bb054c348a8290c845514de7, type: 3}
+  - Type: 1
+    Hand: 2
+    Level: 3
+    Clip: {fileID: 32900000, guid: 4981e4485c5973544a578f311d2a6940, type: 3}
+  - Type: 1
+    Hand: 1
+    Level: 1
+    Clip: {fileID: 32900000, guid: 0f6b4785b4fcda24aab9eec5cb395c9d, type: 3}
+  - Type: 1
+    Hand: 2
+    Level: 1
+    Clip: {fileID: 32900000, guid: 4452339dcc2a2fa4fbf9b58f9cd4199e, type: 3}
+  - Type: 0
+    Hand: 1
+    Level: 3
+    Clip: {fileID: 32900000, guid: 9c649633022d2fd4aae6105b97c92010, type: 3}
+  - Type: 0
+    Hand: 1
+    Level: 2
+    Clip: {fileID: 32900000, guid: 7dced53e0db25a549bfb4532f00f5dc5, type: 3}
+  - Type: 0
+    Hand: 2
+    Level: 2
+    Clip: {fileID: 32900000, guid: 30d8d0ee43b52a44c976094556feead6, type: 3}
+  - Type: 0
+    Hand: 0
+    Level: 1
+    Clip: {fileID: 32900000, guid: 169e2f08efba65940b89fb776687d2d8, type: 3}
+  - Type: 0
+    Hand: 1
+    Level: 1
+    Clip: {fileID: 32900000, guid: 9fc8b51a09cca714c86cddb93dbfc78b, type: 3}
+  - Type: 0
+    Hand: 2
+    Level: 1
+    Clip: {fileID: 32900000, guid: bcd016772b438cf4cb99f719e88abfb8, type: 3}
+  - Type: 2
+    Hand: 1
+    Level: 3
+    Clip: {fileID: 32900000, guid: d20d0e4a02b879b4598a7b295d6b354a, type: 3}
+  - Type: 2
+    Hand: 0
+    Level: 2
+    Clip: {fileID: 32900000, guid: 9dcd554c56adf0749b342aedf331d4d2, type: 3}
+  - Type: 2
+    Hand: 0
+    Level: 1
+    Clip: {fileID: 32900000, guid: 06e8eefa603d74b44ae096f84da38bfc, type: 3}
+  - Type: 2
+    Hand: 2
+    Level: 1
+    Clip: {fileID: 32900000, guid: 87a5f2a8451597b4da66e5657440f37b, type: 3}
 --- !u!1001 &726099712
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9443,6 +9500,63 @@ MonoBehaviour:
   _level1GrassRockEffect: {fileID: 0}
   _level1GrassScissorsEffect: {fileID: 0}
   _level1GrassPaperEffect: {fileID: 0}
+  _attackVideos:
+  - Type: 1
+    Hand: 0
+    Level: 3
+    Clip: {fileID: 32900000, guid: de1e8746bb054c348a8290c845514de7, type: 3}
+  - Type: 1
+    Hand: 2
+    Level: 3
+    Clip: {fileID: 32900000, guid: 4981e4485c5973544a578f311d2a6940, type: 3}
+  - Type: 1
+    Hand: 1
+    Level: 1
+    Clip: {fileID: 32900000, guid: 0f6b4785b4fcda24aab9eec5cb395c9d, type: 3}
+  - Type: 1
+    Hand: 2
+    Level: 1
+    Clip: {fileID: 32900000, guid: 4452339dcc2a2fa4fbf9b58f9cd4199e, type: 3}
+  - Type: 0
+    Hand: 1
+    Level: 3
+    Clip: {fileID: 32900000, guid: 9c649633022d2fd4aae6105b97c92010, type: 3}
+  - Type: 0
+    Hand: 1
+    Level: 2
+    Clip: {fileID: 32900000, guid: 7dced53e0db25a549bfb4532f00f5dc5, type: 3}
+  - Type: 0
+    Hand: 2
+    Level: 2
+    Clip: {fileID: 32900000, guid: 30d8d0ee43b52a44c976094556feead6, type: 3}
+  - Type: 0
+    Hand: 0
+    Level: 1
+    Clip: {fileID: 32900000, guid: 169e2f08efba65940b89fb776687d2d8, type: 3}
+  - Type: 0
+    Hand: 1
+    Level: 1
+    Clip: {fileID: 32900000, guid: 9fc8b51a09cca714c86cddb93dbfc78b, type: 3}
+  - Type: 0
+    Hand: 2
+    Level: 1
+    Clip: {fileID: 32900000, guid: bcd016772b438cf4cb99f719e88abfb8, type: 3}
+  - Type: 2
+    Hand: 1
+    Level: 3
+    Clip: {fileID: 32900000, guid: d20d0e4a02b879b4598a7b295d6b354a, type: 3}
+  - Type: 2
+    Hand: 0
+    Level: 2
+    Clip: {fileID: 32900000, guid: 9dcd554c56adf0749b342aedf331d4d2, type: 3}
+  - Type: 2
+    Hand: 0
+    Level: 1
+    Clip: {fileID: 32900000, guid: 06e8eefa603d74b44ae096f84da38bfc, type: 3}
+  - Type: 2
+    Hand: 2
+    Level: 1
+    Clip: {fileID: 32900000, guid: 87a5f2a8451597b4da66e5657440f37b, type: 3}
 --- !u!1 &1503841800
 GameObject:
   m_ObjectHideFlags: 0
