@@ -5,6 +5,7 @@ using BattleField.Script.HpBar.Model;
 using BattleField.Script.Judge;
 using BattleField.Script.TimelineManagge;
 using BattleField.Script.EnemyData;
+using BattleField.Script.Victory;
 using Common.MasterData;
 using Cysharp.Threading.Tasks;
 using InGame;
@@ -144,6 +145,12 @@ namespace BattleField.Script.Progress
             GameEndSceneData.GameResult =
                 _playerhp.Health == _enemyhp.Health ? GameResult.Draw :
                 _playerhp.Health > _enemyhp.Health ? GameResult.Win : GameResult.Lose;
+
+            if (GameEndSceneData.GameResult == GameResult.Win)
+            {
+                await VictoryEffect.PlayAsync(_playerPresenter.Cards, ct);
+            }
+
             SceneManager.LoadScene("GameEnd");
         }
     }

@@ -4839,9 +4839,17 @@ MonoBehaviour:
     Level: 3
     Clip: {fileID: 32900000, guid: de1e8746bb054c348a8290c845514de7, type: 3}
   - Type: 1
+    Hand: 1
+    Level: 3
+    Clip: {fileID: 32900000, guid: 8d9041d5aa923434688b399c13793e45, type: 3}
+  - Type: 1
     Hand: 2
     Level: 3
     Clip: {fileID: 32900000, guid: 4981e4485c5973544a578f311d2a6940, type: 3}
+  - Type: 1
+    Hand: 0
+    Level: 2
+    Clip: {fileID: 32900000, guid: b7d2c1a9313b0e0479645020d2b0cb01, type: 3}
   - Type: 1
     Hand: 1
     Level: 1
@@ -4890,6 +4898,26 @@ MonoBehaviour:
     Hand: 2
     Level: 1
     Clip: {fileID: 32900000, guid: 87a5f2a8451597b4da66e5657440f37b, type: 3}
+  - Type: 2
+    Hand: 2
+    Level: 2
+    Clip: {fileID: 32900000, guid: 2d8cb1f024a3cc144a8a8991743073b2, type: 3}
+  - Type: 2
+    Hand: 2
+    Level: 3
+    Clip: {fileID: 32900000, guid: 4bd14329f20457d4f9f003aebf4be334, type: 3}
+  - Type: 1
+    Hand: 1
+    Level: 2
+    Clip: {fileID: 32900000, guid: ebd7e5ec5781de342957b144034cb529, type: 3}
+  - Type: 2
+    Hand: 1
+    Level: 1
+    Clip: {fileID: 32900000, guid: 9235152a295b4d0448b4cf70aafa29ed, type: 3}
+  - Type: 2
+    Hand: 0
+    Level: 3
+    Clip: {fileID: 32900000, guid: 277f7cc7d6e360d4592f1c25fd0186fc, type: 3}
 --- !u!1001 &726099712
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9557,6 +9585,34 @@ MonoBehaviour:
     Hand: 2
     Level: 1
     Clip: {fileID: 32900000, guid: 87a5f2a8451597b4da66e5657440f37b, type: 3}
+  - Type: 1
+    Hand: 0
+    Level: 2
+    Clip: {fileID: 32900000, guid: b7d2c1a9313b0e0479645020d2b0cb01, type: 3}
+  - Type: 1
+    Hand: 1
+    Level: 3
+    Clip: {fileID: 32900000, guid: 8d9041d5aa923434688b399c13793e45, type: 3}
+  - Type: 2
+    Hand: 2
+    Level: 2
+    Clip: {fileID: 32900000, guid: 2d8cb1f024a3cc144a8a8991743073b2, type: 3}
+  - Type: 2
+    Hand: 2
+    Level: 3
+    Clip: {fileID: 32900000, guid: 4bd14329f20457d4f9f003aebf4be334, type: 3}
+  - Type: 1
+    Hand: 1
+    Level: 2
+    Clip: {fileID: 32900000, guid: ebd7e5ec5781de342957b144034cb529, type: 3}
+  - Type: 2
+    Hand: 1
+    Level: 1
+    Clip: {fileID: 32900000, guid: 9235152a295b4d0448b4cf70aafa29ed, type: 3}
+  - Type: 2
+    Hand: 0
+    Level: 3
+    Clip: {fileID: 32900000, guid: 277f7cc7d6e360d4592f1c25fd0186fc, type: 3}
 --- !u!1 &1503841800
 GameObject:
   m_ObjectHideFlags: 0

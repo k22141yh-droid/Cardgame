@@ -24,7 +24,7 @@ namespace Project.GameEnd.Program.Scripts.GameEnd
             switch (GameEndSceneData.GameResult)
             {
                 case GameResult.Win:
-                    await ActiveAndPrepareVideo(ct, winVideo);
+                    // 勝利時は BattleField の VictoryEffect で演出済みなので、すぐ ending へ進む
                     break;
                 case GameResult.Draw:
                 case GameResult.Lose:
