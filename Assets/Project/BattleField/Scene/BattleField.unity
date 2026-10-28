@@ -11106,7 +11106,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1590558619298215383, guid: 7f01e9c0d1b9ec94bbe3f9835cb4baab, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1663678816464176681, guid: 7f01e9c0d1b9ec94bbe3f9835cb4baab, type: 3}
       propertyPath: looping
