@@ -17,7 +17,7 @@ namespace BattleField.Script.Battle.Win.Judge {
             await UniTask.WaitUntil(() => _win.IsDone());
             await _playerEffectPresenter.EffectProcess(playerCard);
             int receiveDamage = ApplyDamage(_enemyhp, playerCard, enemyCard);
-            _damageTextEffect.WinDamaged(receiveDamage);
+            _damageTextEffect.WinDamaged(receiveDamage, Matchup(playerCard, enemyCard));
             await PlayDamageTimeline();
         }
     }

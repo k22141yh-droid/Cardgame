@@ -34,6 +34,10 @@ namespace BattleField.Script.Battle {
             return damage;
         }
 
+        protected int Matchup(Card attacker, Card receiver) {
+            return _damageValue.Matchup(attacker.Type, receiver.Type);
+        }
+
         // 相性や威力に関係なく決まった量のダメージを与え、実際に引いた値を返す
         protected int ApplyFixedDamage(HpBarModel target, int damage) {
             damage = _damageValue.DamageBalance(target.Health, damage);
