@@ -9,6 +9,8 @@ using BattleField.Script.Effect;
 namespace BattleField.Script.Battle.Draw.Judge {
     public class Draw : JudgeProcessBase
     {
+        private const int DrawDamage = 1000;
+
         [SerializeField] TimelineManagger _draw;
         [SerializeField] private EffectPresenter _playerEffectPresenter;
         [SerializeField] private EffectPresenter _enemyEffectPresenter;
@@ -18,8 +20,9 @@ namespace BattleField.Script.Battle.Draw.Judge {
             await UniTask.WaitUntil(() => _draw.IsDone());
             await _playerEffectPresenter.EffectProcess(playerCard);
             await _enemyEffectPresenter.EffectProcess(enemyCard);
-            int enemyReceiveDamage = ApplyDamage(_enemyhp, playerCard, enemyCard);
-            int playerReceiveDamage = ApplyDamage(_playerhp, enemyCard, playerCard);
+            // あいこは攻撃力や相性に関係なく、お互いに固定ダメージ
+            int enemyReceiveDamage = ApplyFixedDamage(_enemyhp, DrawDamage);
+            int playerReceiveDamage = ApplyFixedDamage(_playerhp, DrawDamage);
             _damageTextEffect.WinDamaged(enemyReceiveDamage);
             await PlayDamageTimeline();
             _damageTextEffect.LoseDamaged(playerReceiveDamage);

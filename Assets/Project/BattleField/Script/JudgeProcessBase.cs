@@ -34,6 +34,13 @@ namespace BattleField.Script.Battle {
             return damage;
         }
 
+        // 相性や威力に関係なく決まった量のダメージを与え、実際に引いた値を返す
+        protected int ApplyFixedDamage(HpBarModel target, int damage) {
+            damage = _damageValue.DamageBalance(target.Health, damage);
+            target.Health -= damage;
+            return damage;
+        }
+
         protected async UniTask PlayDamageTimeline() {
             _damageTimeline.TimelinePlay();
             await UniTask.WaitUntil(() => _damageTimeline.IsDone());
