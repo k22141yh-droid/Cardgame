@@ -114,7 +114,7 @@ namespace BattleField.Script.Progress
                 Debug.Log(_enemyCardID);
                 _playerIcon.sprite = Resources.Load<Sprite>("Images/null");
                 _enemyIcon.sprite = Resources.Load<Sprite>("Images/null");
-                _round.RoundCount(_turn);
+                _round.RoundCount(_turn, _turn == _maxTurn);
                 _round_Timeline.TimelinePlay();
                 await UniTask.WaitUntil(() => _round_Timeline.IsDone());
                 tehuda.SetImages(_enemyIdSet, _enemyPresenter.Cards);
