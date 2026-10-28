@@ -17,7 +17,7 @@ namespace Project.RuleExplanation.Program.Scripts.Main
             _scannerModel = new ScannerModel();
         
             scanner.Initialize(_scannerModel);
-            ruleExplanation.Initialize();
+            ruleExplanation.Initialize(_scannerModel);
         
 // #if !EXCLUDE_UNITY_DEBUG_SHEET
 //             debugPage.Initialize(_scannerModel);
