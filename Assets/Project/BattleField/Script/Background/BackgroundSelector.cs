@@ -1,10 +1,11 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace BattleField.Script.Background
 {
-    // バトルの背景(溶岩島・密林・データ空間など)を、試合ごとにランダムで 1 つ選んで表示する。
-    // 背景ごとに「地形やモデルをまとめた親オブジェクト」と、空・霧の設定を登録しておく。
+    // バトルの背景(草原・溶岩島・森の中・データ空間など)を、試合ごとにランダムで 1 つ選んで表示する。
+    // 背景ごとに「地形やモデルをまとめた親オブジェクト」と、空・霧・光の設定を登録しておく。
     public class BackgroundSelector : MonoBehaviour
     {
         [Serializable]
@@ -23,51 +24,47 @@ namespace BattleField.Script.Background
             public bool useFog = false;
             public Color fogColor = Color.gray;
             [Min(0f)] public float fogDensity = 0.01f;
+
+            [Tooltip("太陽の光(Directional Light)の色と強さを変えるか")]
+            public bool overrideLight = false;
+            public Color lightColor = Color.white;
+            [Min(0f)] public float lightIntensity = 1f;
         }
 
         [SerializeField] private BackgroundSet[] backgrounds = Array.Empty<BackgroundSet>();
+
+        [Tooltip("背景ごとに色と強さを変える太陽の光")]
+        [SerializeField] private Light mainLight = null;
 
         [Tooltip("-1 ならランダム。0 以上にすると、その番号の背景に固定する(動作確認用)")]
         [SerializeField] private int forcedIndex = -1;
 
         private void Awake()
         {
-            var usable = 0;
-            foreach (var set in backgrounds)
-            {
-                if (set != null && set.root != null) usable++;
-            }
-            if (usable == 0) return;
-
-            var selected = SelectIndex();
+            var candidates = new List<int>();
             for (int i = 0; i < backgrounds.Length; i++)
             {
-                var set = backgrounds[i];
-                if (set == null || set.root == null) continue;
-                set.root.SetActive(i == selected);
+                if (backgrounds[i] != null && backgrounds[i].root != null) candidates.Add(i);
+            }
+            if (candidates.Count == 0) return;
+
+            var selected = SelectIndex(candidates);
+            foreach (var i in candidates)
+            {
+                backgrounds[i].root.SetActive(i == selected);
             }
 
             Apply(backgrounds[selected]);
             Debug.Log($"背景: {backgrounds[selected].name}");
         }
 
-        private int SelectIndex()
+        private int SelectIndex(List<int> candidates)
         {
-            if (forcedIndex >= 0 && forcedIndex < backgrounds.Length && backgrounds[forcedIndex]?.root != null)
-            {
-                return forcedIndex;
-            }
-
-            // root が未設定の枠は選ばない
-            var candidates = new System.Collections.Generic.List<int>();
-            for (int i = 0; i < backgrounds.Length; i++)
-            {
-                if (backgrounds[i] != null && backgrounds[i].root != null) candidates.Add(i);
-            }
+            if (candidates.Contains(forcedIndex)) return forcedIndex;
             return candidates[UnityEngine.Random.Range(0, candidates.Count)];
         }
 
-        private static void Apply(BackgroundSet set)
+        private void Apply(BackgroundSet set)
         {
             if (set.skybox != null)
             {
@@ -81,6 +78,12 @@ namespace BattleField.Script.Background
                 RenderSettings.fogMode = FogMode.ExponentialSquared;
                 RenderSettings.fogColor = set.fogColor;
                 RenderSettings.fogDensity = set.fogDensity;
+            }
+
+            if (set.overrideLight && mainLight != null)
+            {
+                mainLight.color = set.lightColor;
+                mainLight.intensity = set.lightIntensity;
             }
         }
     }
