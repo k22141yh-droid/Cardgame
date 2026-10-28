@@ -36,7 +36,10 @@ namespace BattleField.Script.TimelineManagge {
         void DirectorStopped(PlayableDirector _director) {
             if (_director == director) {
                 _isdone = true;
-                foreach(GameObject gameobject in _gameobjects) gameobject.SetActive(false);
+                // シーンを抜けるとき(再生停止・シーン遷移)は、対象がすでに破棄されていることがある
+                foreach(GameObject gameobject in _gameobjects) {
+                    if (gameobject != null) gameobject.SetActive(false);
+                }
             }
         }
     }
