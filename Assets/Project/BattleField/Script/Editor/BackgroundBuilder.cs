@@ -39,6 +39,9 @@ namespace BattleField.Script.Editor
 
             EnsureFolder(OutDir);
 
+            // 以前の版で作った、いまは使わないマテリアル(ボール状の岩用)
+            AssetDatabase.DeleteAsset($"{OutDir}/Lava_Boulder.mat");
+
             var center = FindCenter(scene);
             var terrain = Object.FindObjectOfType<Terrain>(true);
             float ground = terrain != null ? terrain.SampleHeight(new Vector3(center.x, 0f, center.y)) + terrain.transform.position.y : 0f;
@@ -93,8 +96,7 @@ namespace BattleField.Script.Editor
 
             var rockBase = Load<Texture2D>(LavaDir + "/T_Lava01_basecolor.png");
             var rockEmission = Load<Texture2D>(LavaDir + "/T_Lava01_emissive.png");
-            var island = MakeLit("Lava_IslandRock", rockBase, rockEmission, new Color(0.55f, 0.5f, 0.55f), new Color(2.2f, 0.7f, 0.15f), new Vector2(5f, 5f));
-            var rocks = MakeLit("Lava_Boulder", rockBase, rockEmission, new Color(0.35f, 0.32f, 0.36f), new Color(0.5f, 0.15f, 0.03f), new Vector2(2f, 2f));
+            var island = MakeLit("Lava_IslandRock", rockBase, rockEmission, new Color(0.55f, 0.5f, 0.55f), new Color(1.1f, 0.35f, 0.08f), new Vector2(5f, 5f));
 
             // 溶岩の海
             var poolPrefab = Load<GameObject>(LavaPoolPrefab);
@@ -103,6 +105,12 @@ namespace BattleField.Script.Editor
                 var pool = (GameObject)PrefabUtility.InstantiatePrefab(poolPrefab, root.transform);
                 pool.name = "LavaSea";
                 pool.transform.position = new Vector3(origin.x, origin.y - 0.45f, origin.z);
+
+                // 元の設定だと、面が大きく波打って島より高くなり、カードが見えにくい。波と流れを小さくする
+                var seaRenderer = pool.GetComponent<MeshRenderer>();
+                if (seaRenderer != null) seaRenderer.sharedMaterial = MakeCalmLava(seaRenderer.sharedMaterial);
+
+                CalmEmbers(pool);
             }
             else
             {
@@ -112,22 +120,6 @@ namespace BattleField.Script.Editor
             // カードが出る島
             var disc = NewDisc("Island", root.transform, new Vector3(origin.x, origin.y - 0.5f, origin.z), 26f, 1f, island);
             disc.isStatic = true;
-
-            // 遠くの岩(半分うずまっている)
-            var rng = new Random(11);
-            for (int i = 0; i < 16; i++)
-            {
-                var p = RingPoint(rng, origin, 22f, 55f, true);
-                var rock = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                rock.name = "Boulder" + (i + 1);
-                rock.transform.SetParent(root.transform, false);
-                RemoveCollider(rock);
-                float w = Range(rng, 3f, 8f);
-                rock.transform.position = new Vector3(p.x, origin.y - 0.2f, p.z);
-                rock.transform.localScale = new Vector3(w, w * Range(rng, 0.5f, 1.2f), w * Range(rng, 0.7f, 1.2f));
-                rock.transform.rotation = Quaternion.Euler(0f, Range(rng, 0f, 360f), 0f);
-                rock.GetComponent<MeshRenderer>().sharedMaterial = rocks;
-            }
 
             // 溶岩のあかり
             var lightObject = new GameObject("LavaGlow");
@@ -140,6 +132,61 @@ namespace BattleField.Script.Editor
             light.intensity = 8f;
 
             return root;
+        }
+
+        // 溶岩の海のマテリアルを複製して、波・流れ・光の強さを控えめにする(元のファイルは変えない)
+        private static Material MakeCalmLava(Material source)
+        {
+            if (source == null) return null;
+
+            var path = $"{OutDir}/Lava_Sea_Calm.mat";
+            var mat = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (mat == null)
+            {
+                mat = new Material(source);
+                AssetDatabase.CreateAsset(mat, path);
+            }
+
+            // 海は 15 倍に拡大されているので、波の高さはとても小さい値にする
+            SetFloat(mat, "_DisplacementAmp", 0.004f);
+            SetFloat(mat, "_DisplacementSpeed", 0.4f);
+            SetFloat(mat, "_FlowSpeed", 0.12f);
+            SetFloat(mat, "_Turbulence", 0.5f);
+            SetFloat(mat, "_BubbleIntensity", 0.15f);
+            SetFloat(mat, "_BubbleSpeed", 0.3f);
+            SetFloat(mat, "_EmissionIntensity", 2.5f);
+            SetFloat(mat, "_GlowPulseAmount", 0.04f);
+            SetFloat(mat, "_GlowPulseSpeed", 0.8f);
+            SetFloat(mat, "_HotWhiteBoost", 0.1f);
+
+            EditorUtility.SetDirty(mat);
+            return mat;
+        }
+
+        private static void SetFloat(Material mat, string property, float value)
+        {
+            if (mat.HasProperty(property)) mat.SetFloat(property, value);
+            else Debug.LogWarning($"溶岩のマテリアルに {property} がありません");
+        }
+
+        // 火の粉は、海と同じ 15 倍に拡大されて、画面いっぱいのぼやけた玉になっていた。大きさを元に戻し、数も減らす
+        private static void CalmEmbers(GameObject pool)
+        {
+            var embers = pool.GetComponentInChildren<RekindledFX.Elemental.LavaEmbers>(true);
+            if (embers == null) return;
+
+            var particles = embers.GetComponent<ParticleSystem>();
+            if (particles != null)
+            {
+                var main = particles.main;
+                main.scalingMode = ParticleSystemScalingMode.Local;
+            }
+
+            embers.area = new Vector2(46f, 46f);
+            embers.rate = 40f;
+            embers.size = new Vector2(0.03f, 0.07f);
+            embers.riseSpeed = 0.5f;
+            EditorUtility.SetDirty(embers);
         }
 
         // ---------- 森の中 ----------
