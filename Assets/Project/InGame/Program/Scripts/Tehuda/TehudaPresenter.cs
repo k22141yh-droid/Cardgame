@@ -91,22 +91,10 @@ namespace Project.InGame.Program.Scripts.Tehuda
             rect.anchoredPosition = topLeft + new Vector2(0f, 4f);
         }
 
-        // 手の形の画像を、そのカードの属性の色で塗る(白い画像に色を掛ける)
         private void SetImage(RawImage image, Card card)
         {
             image.texture = GetHandTexture(card.Hand);
-            image.color = GetTypeColor(card.Type);
-        }
-
-        private static Color GetTypeColor(CardType type)
-        {
-            return type switch
-            {
-                CardType.Fire => new Color(1f, 0.36f, 0.24f),
-                CardType.Water => new Color(0.25f, 0.62f, 1f),
-                CardType.Grass => new Color(0.32f, 0.85f, 0.4f),
-                _ => new Color(1f, 0.84f, 0.2f)
-            };
+            image.color = Color.white;
         }
 
         private Texture GetHandTexture(CardHand hand)
