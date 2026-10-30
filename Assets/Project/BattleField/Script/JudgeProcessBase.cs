@@ -1,5 +1,6 @@
 using UnityEngine;
 using Cysharp.Threading.Tasks;
+using System.Threading;
 
 using BattleField.Script.Damage;
 using BattleField.Script.HpBar.Model;
@@ -24,6 +25,12 @@ namespace BattleField.Script.Battle {
         protected void SetJankenOptions(Card playerCard, Card enemyCard) {
             _playerJankenSelector.SetOptions(playerCard.Hand, playerCard.Type);
             _enemyJankenSelector.SetOptions(enemyCard.Hand, enemyCard.Type);
+        }
+
+        // ジャンケンの Timeline を始めた直後に呼ぶ。手がぶつかる瞬間に火花を散らして画面を揺らす
+        protected void PlayClashEffect(Card playerCard, Card enemyCard, CancellationToken ct) {
+            JankenClashEffect.Play(_playerJankenSelector.HandTransform, _enemyJankenSelector.HandTransform,
+                playerCard.Type, enemyCard.Type, ct);
         }
 
         // attacker の威力とタイプから target へのダメージを計算し、HP に反映して実際に引いた値を返す

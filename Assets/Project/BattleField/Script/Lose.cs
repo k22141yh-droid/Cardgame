@@ -14,6 +14,7 @@ namespace BattleField.Script.Battle.Lose.Judge {
         public async UniTask LoseProcess(Card playerCard, Card enemyCard, CancellationToken ct) {
             _lose.TimelinePlay();
             SetJankenOptions(playerCard, enemyCard);
+            PlayClashEffect(playerCard, enemyCard, ct);
             await UniTask.WaitUntil(() => _lose.IsDone());
             await _enemyEffectPresenter.EffectProcess(enemyCard);
             int receiveDamage = ApplyDamage(_playerhp, enemyCard, playerCard);

@@ -17,6 +17,7 @@ namespace BattleField.Script.Battle.Draw.Judge {
         public async UniTask DrawProcess(Card playerCard, Card enemyCard, CancellationToken ct) {
             _draw.TimelinePlay();
             SetJankenOptions(playerCard, enemyCard);
+            PlayClashEffect(playerCard, enemyCard, ct);
             await UniTask.WaitUntil(() => _draw.IsDone());
             // あいこは攻撃力や相性に関係なく、お互いに固定ダメージ。
             // 自分の攻撃 → 相手へのダメージ → 相手の攻撃 → 自分へのダメージ の順に見せる

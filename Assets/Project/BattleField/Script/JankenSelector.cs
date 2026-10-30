@@ -19,6 +19,9 @@ namespace BattleField.Script.Janken {
         [SerializeField] private Sprite _yoshimoto;
         [SerializeField] private Image _jankenSelector;
 
+        // 画面に出ている手の画像(ぶつかる位置を求めるのに使う)
+        public Transform HandTransform => _jankenSelector != null ? _jankenSelector.transform : transform;
+
         private void Gu_(CardType type) {
             if (type == CardType.Fire) _jankenSelector.sprite = _fireRock;
             else if (type == CardType.Water) _jankenSelector.sprite = _waterRock;
