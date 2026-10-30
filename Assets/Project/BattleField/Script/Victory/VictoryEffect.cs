@@ -222,7 +222,8 @@ namespace BattleField.Script.Victory
         private static async UniTask SlideIn(RectTransform character, float delay, CancellationToken ct)
         {
             var target = character.anchoredPosition;
-            var start = target + new Vector2(1500f, 0f);
+            // 画面の右端より外から出す(横に広い画面でも、登場前に見えてしまわないように余裕を取る)
+            var start = new Vector2(ReferenceWidth / 2f + character.sizeDelta.x / 2f + 600f, target.y);
             character.anchoredPosition = start;
 
             await UniTask.Delay(TimeSpan.FromSeconds(delay), cancellationToken: ct);
