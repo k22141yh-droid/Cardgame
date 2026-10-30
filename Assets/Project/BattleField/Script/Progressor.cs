@@ -149,6 +149,8 @@ namespace BattleField.Script.Progress
                 _playerhp.Health == _enemyhp.Health ? GameResult.Draw :
                 _playerhp.Health > _enemyhp.Health ? GameResult.Win : GameResult.Lose;
 
+            await GameSetEffect.PlayAsync(ct);
+
             if (GameEndSceneData.GameResult == GameResult.Win)
             {
                 await VictoryEffect.PlayAsync(_playerPresenter.Cards, ct);
