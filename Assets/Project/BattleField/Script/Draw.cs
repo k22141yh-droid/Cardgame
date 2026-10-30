@@ -18,13 +18,15 @@ namespace BattleField.Script.Battle.Draw.Judge {
             _draw.TimelinePlay();
             SetJankenOptions(playerCard, enemyCard);
             await UniTask.WaitUntil(() => _draw.IsDone());
+            // あいこは攻撃力や相性に関係なく、お互いに固定ダメージ。
+            // 自分の攻撃 → 相手へのダメージ → 相手の攻撃 → 自分へのダメージ の順に見せる
             await _playerEffectPresenter.EffectProcess(playerCard);
-            await _enemyEffectPresenter.EffectProcess(enemyCard);
-            // あいこは攻撃力や相性に関係なく、お互いに固定ダメージ
             int enemyReceiveDamage = ApplyFixedDamage(_enemyhp, DrawDamage);
-            int playerReceiveDamage = ApplyFixedDamage(_playerhp, DrawDamage);
             _damageTextEffect.WinDamaged(enemyReceiveDamage);
             await PlayDamageTimeline();
+
+            await _enemyEffectPresenter.EffectProcess(enemyCard);
+            int playerReceiveDamage = ApplyFixedDamage(_playerhp, DrawDamage);
             _damageTextEffect.LoseDamaged(playerReceiveDamage);
             await PlayDamageTimeline();
         }
