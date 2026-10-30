@@ -23,6 +23,11 @@ namespace BattleField.Script.Effect
                     var main = particles.main;
                     main.startColor = new ParticleSystem.MinMaxGradient(a, b);
                     ApplyShape(particles, type);
+
+                    // 尾(Trail)のマテリアルは URP で表示できない標準のもので、ピンクの板になってしまうため、
+                    // 粒と同じマテリアルで描く
+                    var renderer = particles.GetComponent<ParticleSystemRenderer>();
+                    if (renderer != null) renderer.trailMaterial = renderer.sharedMaterial;
                 }
             }
         }
