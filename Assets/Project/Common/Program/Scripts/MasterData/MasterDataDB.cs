@@ -1,7 +1,9 @@
 ﻿#nullable enable
 
 using Generated.MasterData;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 
 namespace Common.MasterData
