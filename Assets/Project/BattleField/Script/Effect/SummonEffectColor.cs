@@ -23,6 +23,11 @@ namespace BattleField.Script.Effect
                     var main = particles.main;
                     main.startColor = new ParticleSystem.MinMaxGradient(a, b);
                     ApplyShape(particles, type);
+
+                    // 尾(Trail)のマテリアルは URP で表示できない標準のもので、ピンクの板になってしまうため、
+                    // 粒と同じマテリアルで描く
+                    var renderer = particles.GetComponent<ParticleSystemRenderer>();
+                    if (renderer != null) renderer.trailMaterial = renderer.sharedMaterial;
                 }
             }
         }
@@ -141,7 +146,10 @@ namespace BattleField.Script.Effect
         private static void SetTrails(ParticleSystem.TrailModule trails, bool enabled, float lifetime)
         {
             trails.enabled = enabled;
-            if (enabled) trails.lifetime = lifetime;
+            if (!enabled) return;
+            trails.lifetime = lifetime;
+            // 粒の大きさのままだと太い帯になるので、細い筋にして先へ行くほど細くする
+            trails.widthOverTrail = new ParticleSystem.MinMaxCurve(0.25f, new AnimationCurve(new Keyframe(0f, 1f), new Keyframe(1f, 0f)));
         }
 
         private static ParticleSystem.MinMaxCurve Curve(params (float time, float value)[] keys)
